@@ -47,9 +47,7 @@ router.patch('/:id', function(req, res) {
     if (!message) {
       return res.status(500).json({
         title: "No Messages Found!!",
-        error: {
-          message: 'Message not found when searching for ID'
-        }
+        error: {message: 'Message not found when searching for ID'}
       });
     }
     message.content = req.body.content;
@@ -68,4 +66,32 @@ router.patch('/:id', function(req, res) {
   });
 });
 
+router.delete('/:id', function(req, res){
+  Message.findById(req.params.id, function(err, message){
+    if (err) {
+      return res.status(500).json({
+        title: "an error occoured",
+        error: err
+      });
+    }
+    if (!message) {
+      return res.status(500).json({
+        title: "No Messages Found!!",
+        error: {message: 'Message not found when searching for ID'}
+      });
+    }
+    message.remove(function(err, result) {
+      if (err) {
+        return res.status(500).json({
+          title: "an error occoured",
+          error: err
+        });
+      }
+      res.status(200).json({
+        message: "DELETED message in db",
+        obj: result
+      });
+    });
+  });
+});
 module.exports = router;
